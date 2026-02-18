@@ -17,8 +17,8 @@ export async function POST(req: Request) {
   const audio = await openai.audio.speech.create({
     model: "gpt-4o-mini-tts",
     voice: "coral",
-    input: text.trim(),
-    format: "mp3", // easiest for browser playback
+    input: text.trim()
+    
   });
 
   const buf = Buffer.from(await audio.arrayBuffer());
