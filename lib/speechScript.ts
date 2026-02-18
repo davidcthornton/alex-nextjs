@@ -37,14 +37,14 @@ export function buildSpeakableScript(r: AlexResult): string {
   }
 
   // Optional: keep excerpts short for audio
-  if (r.relevant_excerpts?.length) {
+ {/* if (r.relevant_excerpts?.length) {
     const ex = r.relevant_excerpts[0];
     let excerpt = ex.excerpt.trim();
     if (excerpt.length > 350) excerpt = excerpt.slice(0, 350).replace(/\s+\S*$/, "") + "…";
     parts.push("Relevant excerpt.");
     if (ex.location_hint?.trim()) parts.push(`Location. ${ex.location_hint.trim()}.`);
     parts.push(excerpt);
-  }
+  }*/}
 
   return parts.join("\n\n");
 }

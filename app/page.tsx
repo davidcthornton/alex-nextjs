@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react";
 import { buildSpeakableScript } from "@/lib/speechScript";
+import { AlexRenderer } from "@/lib/AlexRenderer";
+
 
 type AlexResult = any; // for MVP; you can strongly type this later
 
@@ -114,64 +116,110 @@ export default function Page() {
   }
 
   return (
-    <div style={{ maxWidth: 900, margin: "24px auto", fontFamily: "system-ui" }}>
-      <h1>ALEX – Mobile Web MVP</h1>
+    <div className="min-h-screen bg-slate-100">
+      <div className="mx-auto max-w-3xl p-4 sm:p-6 space-y-4">
+        {/* Header */}
+        <header className="space-y-1">
+          <h1 className="text-xl sm:text-2xl font-semibold text-slate-900">
+            ALEX – Artificial Law Enforcement eXpert
+          </h1>
 
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
-        {status !== "recording" ? (
-          <button onClick={startRecording}>🎙️ Start recording</button>
-        ) : (
-          <button onClick={stopRecording}>⏹️ Stop recording</button>
-        )}
+        </header>
 
-        <button
-          onClick={() => {
-            if (!question.trim()) return;
-            askAlex(question);
-          }}
-        >
-          Ask ALEX
-        </button>
 
-        <button
-          onClick={() => {
-            if (result) speakResult(result);
-          }}
-          disabled={!result}
-        >
-          🔊 Speak response
-        </button>
 
-        <button onClick={bargeIn}>🛑 Barge-in (stop audio)</button>
-      </div>
-
-      <div style={{ marginBottom: 12, color: "#555" }}>Status: {status}</div>
-
-      <div style={{ display: "grid", gap: 12 }}>
-        <div>
-          <label>Question (typed or from STT)</label>
+        {/* Input */}
+        <section className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-4 space-y-2">
           <textarea
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
-            rows={3}
-            style={{ width: "100%" }}
+            placeholder="Type a question or tap Record…"
+            className="w-full rounded-xl border border-slate-300 bg-white p-3 text-sm shadow-sm
+                      focus:border-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-300"
+            rows={4}
           />
-          {transcript && (
-            <div style={{ marginTop: 6, color: "#555" }}>
-              <strong>Transcript:</strong> {transcript}
+
+
+
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+
+
+            {status !== "recording" ? (
+              <button
+                className="alex-btn alex-btn-primary w-full sm:w-auto"
+                onClick={startRecording}
+              >
+                🎙️ Record
+              </button>
+            ) : (
+              <button
+                className="alex-btn alex-btn-primary w-full sm:w-auto"
+                onClick={stopRecording}
+              >
+                ⏹️ Stop
+              </button>
+            )}
+            <button
+              className="alex-btn alex-btn-primary w-full sm:w-auto"
+              onClick={() => {
+                if (!question.trim()) return;
+                askAlex(question);
+              }}
+            >
+              Ask ALEX
+            </button>
+          </div>
+          {/*{transcript && (
+            <div className="text-xs text-slate-600">
+              <span className="font-semibold">Transcript:</span> {transcript}
             </div>
-          )}
-        </div>
+          )}*/}
+        </section>
 
-        <div>
-          <label>Response (JSON)</label>
-          <pre style={{ background: "#f6f6f6", padding: 12, borderRadius: 8, overflow: "auto" }}>
-            {result ? JSON.stringify(result, null, 2) : "(none yet)"}
-          </pre>
-        </div>
+        {/* Audio */}
 
-        <audio ref={audioRef} controls style={{ width: "100%" }} />
+        <section className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-3">
+
+          <button
+            className="alex-btn alex-btn-primary w-full sm:w-auto"
+            onClick={() => {
+              if (result) speakResult(result);
+            }}
+            disabled={!result}
+          >
+            🔊 Read Response Aloud
+          </button>
+          <audio ref={audioRef} controls className="w-full" />
+        </section>
+
+        {/* Response */}
+        <section className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-4">
+          <div className="text-sm font-medium text-slate-900 mb-2">Response</div>
+          {result ? <AlexRenderer result={result} /> : <div className="text-slate-600">(none yet)</div>}
+        </section>
+
+
+        <section className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-3">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+
+
+            {/*<button
+              className="alex-btn alex-btn-primary w-full sm:w-auto"
+              onClick={bargeIn}
+            >
+              🛑 Stop Audio
+            </button>*/}
+            <div className="text-sm text-slate-600">Status: {status}</div>
+          </div>
+        </section>
+
+
       </div>
     </div>
   );
+
+
+
+
+
 }
